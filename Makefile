@@ -1,7 +1,7 @@
 VPATH=src/ src/Document src/Struct src/Thread src/Config src/Thread/Blocking
 CC=/usr/bin/g++
 PROGRAM=mp3sort
-LDLIBS=-lboost_program_options -lboost_thread
+LDLIBS=-lboost_program_options -lboost_thread-mt
 
 mp3sort: src/mp3sort.cpp Options.o Queue.h
 	$(CC) -o $(PROGRAM) src/mp3sort.cpp Options.o  $(LDLIBS)
