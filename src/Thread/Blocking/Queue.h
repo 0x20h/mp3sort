@@ -15,6 +15,11 @@ template <class T> class Queue
 		T dequeue();
 		int size();
 		bool empty();
+
+		/**
+		 * blocks until the queue gets empty next time
+		 */
+		void waitUntilEmpty();
 	private:
 		// internal queue
 		std::queue<T> q;
@@ -70,6 +75,15 @@ int Queue<T>::size() {
 template <class T>
 bool Queue<T>::empty() {
 	return q.empty();
+}
+
+template <class T>
+void Queue<T>::waitUntilEmpty() {
+	boost::unique_lock<boost::mutex> lock(mutex);
+
+	while(q.size() != 0) {
+		emptied.wait(lock);
+	}
 }
 
 }}

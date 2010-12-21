@@ -41,25 +41,16 @@ Options::Options(int argc, char * argv[])
 	pos.add("src", 1);
 	pos.add("dst", 2);
 
-	try {
-		po::store(po::command_line_parser(argc, argv).options(*this->o_visible).positional(pos).run(), this->v_map);
+	po::store(po::command_line_parser(argc, argv).options(*this->o_visible).positional(pos).run(), this->v_map);
 	
-		// now merge with config file
-		const char* filename = this->hasOption("config") ? this->getOption("config").as<string>().c_str() : DEFAULT_CONF_RC;
-		ifstream ifile(filename);
-		if (ifile) {
-			try {
-				po::store(po::parse_config_file(ifile, *this->o_all), this->v_map);
-			} catch (exception &e) {
-				cerr << "Error parsing " << filename << ". " << e.what() << endl;	
-			}
-		} else {
-			cerr << "config file " << filename  << " does not exist. skipping..." << endl;
-		}
-	} catch (exception &e) {
-		cerr << "Error: " << e.what() << endl;
+	// now merge with config file
+	const char* filename = this->hasOption("config") ? this->getOption("config").as<string>().c_str() : DEFAULT_CONF_RC;
+	ifstream ifile(filename);
+
+	if (ifile) {
+		po::store(po::parse_config_file(ifile, *this->o_all), this->v_map);
 	}
-	
+
 	// notify callbacks
 	po::notify(this->v_map);
 }
