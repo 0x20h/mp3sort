@@ -65,4 +65,7 @@ Document::Handler knows how to...
 - determine destination path from the document information (e.g. metadata, fetch info from lastfm for .mp3)
 - Document::Handler must be implemented by all filetype handlers
 
+Misc
 
+for music classification see (fingerprinter is based on this work)
+http://www.cs.cmu.edu/~yke/musicretrieval/cvpr2005-mr.pdf
