@@ -6,7 +6,7 @@ namespace Document
 		public:
 			MP3();
 			~MP3();
-		protected:
-			void process(std::string *path);
+			std::string getDescription();
+			void process();
 	};
 }

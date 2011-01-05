@@ -9,16 +9,18 @@ using namespace Document;
 MP3::MP3() {}
 MP3::~MP3() {}
 
-void MP3::process(std::string *path) {
+void MP3::process() {
 	boost::uniform_int<> uni_dist(0,4000);
 	boost::variate_generator<boost::minstd_rand&, boost::uniform_int<> > uni(gen, uni_dist);
 	int sleep = uni();
-	std::cout << "thread " << boost::this_thread::get_id() << " sleeping for " << sleep << std::endl;
+	std::cout << "thread " << boost::this_thread::get_id() << " checking " << work << std::endl;
 	boost::posix_time::milliseconds s(sleep);
 	boost::this_thread::sleep(s);
-	onFinishCallback(this);
 }
 
+std::string MP3::getDescription() {
+	return "Mp3 Handler";
+}
 
 extern "C" {
 	Handler* factory() { return new MP3; } 

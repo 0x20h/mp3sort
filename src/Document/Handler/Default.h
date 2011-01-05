@@ -2,9 +2,9 @@
 
 namespace Document 
 {
-	class Ogg : public Handler {
+	class Default : public Handler {
 		public:
-			std::string getDescription();
 			void process();
+			std::string getDescription();
 	};
 }

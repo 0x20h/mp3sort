@@ -59,12 +59,10 @@ const po::options_description Options::getDescription() {
 	return *this->o_visible;
 }
 
-bool Options::hasOption(string name)
-{
+bool Options::hasOption(const string name) {
 	return (bool) this->v_map.count(name);
 }
 
-const po::variable_value& Options::getOption(string name)
-{
+const po::variable_value& Options::getOption(const string name) {
 	return this->v_map[name];
 }
