@@ -15,7 +15,7 @@ lib: src/Document/Handler/* Handler.o
 	$(CC) -fPIC -c src/Document/Handler.cpp
 	$(CC) -o lib/libhandler-mp3.so.1 -shared MP3.o Handler.o
 	$(CC) -o lib/libhandler-ogg.so.1 -shared Ogg.o Handler.o
-#	ldconfig -v -n lib
+	
 	ln -sf libhandler-mp3.so.1 lib/libhandler-mp3.so
 	ln -sf libhandler-ogg.so.1 lib/libhandler-ogg.so
 

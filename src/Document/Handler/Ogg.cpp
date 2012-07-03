@@ -4,7 +4,7 @@
 using namespace Document;
 
 void Ogg::process() {
-	std::cout << "thread " << boost::this_thread::get_id() << " handling " << this->work << std::endl;
+	std::cout << "thread " << boost::this_thread::get_id() << " handling gg"  << std::endl;
 }
 
 std::string Ogg::getDescription() {

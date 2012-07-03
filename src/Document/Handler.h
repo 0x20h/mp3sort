@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "../Config/Options.h"
+#include "../Thread/Blocking/Queue.h"
 
 namespace Document 
 {
@@ -12,13 +13,12 @@ namespace Document
 			Handler();
 			~Handler();
 			void setOptions(const Config::Options *o);
-			void setWork(std::string file);
-
+			void setQueue(Thread::Blocking::Queue<std::string *> *q);
 			virtual void process() = 0;
 			virtual std::string getDescription() = 0;
 		protected:
 			const Config::Options *options;
-			std::string work;
+			Thread::Blocking::Queue<std::string *> *queue;
 	};
 }
 

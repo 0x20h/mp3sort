@@ -6,8 +6,33 @@
 
 using namespace Document;
 
+struct Worker {
+	Handler *worker;
+
+	void operator()() const {
+		std::cout << boost::this_thread::get_id() << " start" << std::endl;
+		worker->process();
+		std::cout << boost::this_thread::get_id() << " finished" << std::endl;
+		delete worker;
+		return;
+	}
+};
+
+
 Dispatcher::~Dispatcher() {
 	// kill all handler threads and delete references
+}
+
+void Dispatcher::init() {
+	Worker w;
+	Handler *h = Dispatcher::getHandler("mp3");
+	h->setQueue(&this->t_queue);
+	w.worker = h;
+
+	for (int i = 0; i < 4; i++) {
+		boost::thread(h);
+		t_group.create_thread(w);
+	}
 }
 
 Handler* Dispatcher::getHandler(const std::string& type) {
@@ -40,30 +65,9 @@ void Dispatcher::join() {
 	t_group.join_all();
 }
 
-struct ThreadExit {
-	Handler *worker;
-
-	void operator()() const {
-		std::cout << boost::this_thread::get_id() << " exiting" << std::endl;
-//		delete worker;
-	}
-};
-
-
-struct ThreadContext {
-	Handler *worker;
-
-	void operator()() const {
-		std::cout << boost::this_thread::get_id() << " start" << std::endl;
-		worker->process();
-		std::cout << boost::this_thread::get_id() << " finished" << std::endl;
-		delete worker;
-		return;
-	}
-};
-
 void Dispatcher::dispatch(std::string work) {
-	ThreadContext context;
+/*	// put work into queue
+	Worker context;
 	// identify type of work
 	std::string type = boost::filesystem::extension(work).erase(0,1);
 	Handler* h = this->getHandler(type);
@@ -71,5 +75,8 @@ void Dispatcher::dispatch(std::string work) {
 	h->setOptions(&options);
 	context.worker = h;
 	// add thread to pool
-	t_group.create_thread(context);
+	if (t_group.size() < 10) {
+		t_group.create_thread(context);
+	}
+	*/
 }	

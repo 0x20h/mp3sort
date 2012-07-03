@@ -13,7 +13,7 @@ void MP3::process() {
 	boost::uniform_int<> uni_dist(0,4000);
 	boost::variate_generator<boost::minstd_rand&, boost::uniform_int<> > uni(gen, uni_dist);
 	int sleep = uni();
-	std::cout << "thread " << boost::this_thread::get_id() << " checking " << work << std::endl;
+	std::cout << "thread " << boost::this_thread::get_id() << " checking " << std::endl;
 	boost::posix_time::milliseconds s(sleep);
 	boost::this_thread::sleep(s);
 }
