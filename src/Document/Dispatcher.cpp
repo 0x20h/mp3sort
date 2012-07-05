@@ -7,31 +7,44 @@
 using namespace Document;
 
 struct Worker {
-	Handler *worker;
+	Thread::Blocking::Queue<std::string *> *queue;
+	Dispatcher *dispatcher;
 
-	void operator()() const {
-		std::cout << boost::this_thread::get_id() << " start" << std::endl;
-		worker->process();
-		std::cout << boost::this_thread::get_id() << " finished" << std::endl;
-		delete worker;
-		return;
-	}
+	void operator ()();
 };
 
+void Worker::operator ()() {
+
+		while (true) {
+			// get next item from queue
+			std::string *item = queue->dequeue();
+			std::cout << boost::this_thread::get_id() <<" starts processing " << item << std::endl;
+
+			boost::filesystem::path p(*item);
+			std::string type = boost::filesystem::extension(p).erase(0,1);
+			Handler *h = dispatcher->getHandler(type);
+			h->process();
+			std::cout << boost::this_thread::get_id() << " finished" << std::endl;
+		}
+
+//		shazaan 
+//		soundhound
+	return;
+}
 
 Dispatcher::~Dispatcher() {
 	// kill all handler threads and delete references
 }
 
 void Dispatcher::init() {
-	Worker w;
-	Handler *h = Dispatcher::getHandler("mp3");
-	h->setQueue(&this->t_queue);
-	w.worker = h;
+	Worker *w;
 
 	for (int i = 0; i < 4; i++) {
-		boost::thread(h);
-		t_group.create_thread(w);
+		std::cout << boost::this_thread::get_id() << " initializing worker " << i << std::endl;
+		w = new Worker;
+		w->queue = &this->t_queue;
+		w->dispatcher = this;
+		t_group.create_thread(*w);
 	}
 }
 
@@ -66,17 +79,5 @@ void Dispatcher::join() {
 }
 
 void Dispatcher::dispatch(std::string work) {
-/*	// put work into queue
-	Worker context;
-	// identify type of work
-	std::string type = boost::filesystem::extension(work).erase(0,1);
-	Handler* h = this->getHandler(type);
-	h->setWork(work);
-	h->setOptions(&options);
-	context.worker = h;
-	// add thread to pool
-	if (t_group.size() < 10) {
-		t_group.create_thread(context);
-	}
-	*/
-}	
+	t_queue.enqueue(&work);
+}

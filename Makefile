@@ -9,7 +9,7 @@ all: lib mp3sort
 mp3sort: src/mp3sort.cpp Options.o Queue.h Dispatcher.o Default.o Handler.h
 	$(CC) -fPIC -Llib/ -o $(PROGRAM) src/mp3sort.cpp Options.o  Dispatcher.o Default.o Handler.o $(LDLIBS) 
 
-lib: src/Document/Handler/* Handler.o
+lib: MP3.o Handler.o
 	rm -rf lib && mkdir lib
 	$(CC) -fPIC -c src/Document/Handler/*cpp 
 	$(CC) -fPIC -c src/Document/Handler.cpp

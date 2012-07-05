@@ -13,11 +13,11 @@ namespace Document
 		public:
 			Dispatcher(const Config::Options& options, const int size) : options(options), size(size), t_queue(size) {}
 			~Dispatcher();
+			Handler* getHandler(const std::string& type);
 			void dispatch(std::string work);
 			void init();
 			void join();
 		private:
-			Handler* getHandler(const std::string& type);
 			std::map<std::string,Document::Handler *(*)()> m_factories;
 			std::map<std::string,Document::Handler *> m_handlers;
 			Thread::Blocking::Queue<std::string *> t_queue;

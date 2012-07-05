@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
 		}
 
 		Document::Dispatcher dispatcher(options, 5);
+		dispatcher.init();
 		string srcPath = options.getOption("src").as<string>();
 		path src(srcPath);
 		try {
