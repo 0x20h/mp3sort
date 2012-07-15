@@ -8,13 +8,21 @@
 
 namespace Document 
 {
+	struct Metadata {
+		std::string filename;
+		std::string fingerprint;
+		std::string interpret;
+		std::string title;
+		std::string album;
+		short int   error;
+	};
+
 	class Handler {
 		public:
 			Handler();
 			~Handler();
 			void setOptions(const Config::Options *o);
-			void setQueue(Thread::Blocking::Queue<std::string *> *q);
-			virtual void process() = 0;
+			virtual Document::Metadata process(const std::string filename) = 0;
 			virtual std::string getDescription() = 0;
 		protected:
 			const Config::Options *options;

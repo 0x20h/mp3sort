@@ -9,8 +9,3 @@ Handler::~Handler() {}
 void Handler::setOptions(const Config::Options *o) {
 	this->options = o;
 }
-
-void Handler::setQueue(Thread::Blocking::Queue<std::string *> *q) {
-	this->queue = q;
-}
-

@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
 		dispatcher.init();
 		string srcPath = options.getOption("src").as<string>();
 		path src(srcPath);
+
 		try {
 			if (exists(src) && is_directory(src)) {
 				for(recursive_directory_iterator end, dir(src); dir != end; ++dir) {

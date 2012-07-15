@@ -1,4 +1,7 @@
 #include "../Handler.h"
+#include "../../fpclient/MP3_Source.h"
+#include "../../fpclient/HTTPClient.h"
+#include <fplib/FingerprintExtractor.h>
 
 namespace Document 
 {
@@ -7,6 +10,6 @@ namespace Document
 			MP3();
 			~MP3();
 			std::string getDescription();
-			void process();
+			Metadata process(const std::string filename);
 	};
 }

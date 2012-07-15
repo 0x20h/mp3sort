@@ -3,8 +3,10 @@
 
 using namespace Document;
 
-void Ogg::process() {
+Metadata Ogg::process(std::string filename) {
+	Metadata m;
 	std::cout << "thread " << boost::this_thread::get_id() << " handling gg"  << std::endl;
+	return m;
 }
 
 std::string Ogg::getDescription() {

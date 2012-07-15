@@ -3,8 +3,10 @@
 
 using namespace Document;
 
-void Default::process() {
-	std::cout << "thread " << boost::this_thread::get_id() << " doing nothing with " << std::endl;
+Metadata Default::process(std::string filename) {
+	Metadata m;
+//	std::cout << "thread " << boost::this_thread::get_id() << " doing nothing with " << std::endl;
+	return m;
 }
 
 std::string Default::getDescription() {

@@ -3,15 +3,14 @@
 #include <iostream>
 #include "Dispatcher.h"
 #include "Handler/Default.h"
-#define NUM_WORKERS 4
-#define POISON_PILL "foo"
+#define NUM_WORKERS 16
 
 using namespace Document;
 
 /**
  * stop marker
  */
-static std::string pp ("foo");
+static std::string pp ("-");
 
 struct Worker {
 	Thread::Blocking::Queue<std::string *> *queue;
@@ -27,16 +26,21 @@ void Worker::operator ()() {
 
 		// stop marker?
 		if (*item == pp) {
-			std::cout << boost::this_thread::get_id() <<" got poisoned, exitus..." << std::endl;
+			std::cout << boost::this_thread::get_id() <<" got stop signal..." << std::endl;
 			return;
 		}
 
-		std::cout << boost::this_thread::get_id() <<" starts processing " << item << std::endl;
 		boost::filesystem::path p(*item);
 		std::string type = boost::filesystem::extension(p).erase(0,1);
+		
+		for (int i = 0; i < type.length(); i++) {
+			type[i] = std::tolower(type[i]);
+		}
+
 		Handler *h = dispatcher->getHandler(type);
-		h->process();
-		std::cout << boost::this_thread::get_id() << " finished" << std::endl;
+		std::cout << boost::this_thread::get_id() <<" processing " << *item << std::endl;
+		Document::Metadata m = h->process(*item);
+		delete h;
 	}
 
 	return;
@@ -50,20 +54,29 @@ void Dispatcher::init() {
 	Worker *w;
 
 	for (int i = 0; i < NUM_WORKERS; i++) {
-		std::cout << boost::this_thread::get_id() << " initializing worker " << i << std::endl;
 		w = new Worker;
 		w->queue = &this->t_queue;
 		w->dispatcher = this;
 		t_group.create_thread(*w);
 	}
 }
+/*
+Handler* Dispatcher::getHandler(const std::string& type) {
+	Handler *handler;
+
+	if (!find(type, handler, map)) {
+	}
+
+	return handler->clone;
+}
+*/
 
 Handler* Dispatcher::getHandler(const std::string& type) {
-	std::map<std::string, Document::Handler *(*)()>::iterator it;
+	std::map<std::string, Document::Handler*>::iterator it;
 	Handler *h;
-	it = m_factories.find(type);
+	it = m_handlers.find(type);
 
-	if (it == m_factories.end()) {	
+	if (it == m_handlers.end()) {	
 		// factory not initialized, try to load handler lib
 		std::string lib ("lib/libhandler-");
 		lib.append(type).append(".so");
@@ -72,7 +85,6 @@ Handler* Dispatcher::getHandler(const std::string& type) {
 			// return default handler
 			std::cout << "Error loading: " << dlerror() << std::endl;
 			// associate default handler with the type
-			m_handlers[type] = new Default;
 			return new Default;
 		} else {
 			m_factories[type] = (Document::Handler *(*)()) dlsym(handle, "factory");
@@ -97,6 +109,8 @@ void Dispatcher::join() {
 	t_group.join_all();
 }
 
-void Dispatcher::dispatch(std::string work) {
-	t_queue.enqueue(&work);
+void Dispatcher::dispatch(const std::string work) {
+	std::string* copy;
+	copy = new std::string(work);
+	t_queue.enqueue(copy);
 }
