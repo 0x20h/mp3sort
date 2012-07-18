@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Dispatcher.h"
 #include "Handler/Default.h"
+#include "Handler/MP3.h"
 #define NUM_WORKERS 16
 
 using namespace Document;
@@ -38,7 +39,7 @@ void Worker::operator ()() {
 		}
 
 		Handler *h = dispatcher->getHandler(type);
-		std::cout << boost::this_thread::get_id() <<" processing " << *item << std::endl;
+//		std::cout << boost::this_thread::get_id() <<" processing " << *item << std::endl;
 		Document::Metadata m = h->process(*item);
 		delete h;
 	}
@@ -60,17 +61,16 @@ void Dispatcher::init() {
 		t_group.create_thread(*w);
 	}
 }
-/*
-Handler* Dispatcher::getHandler(const std::string& type) {
-	Handler *handler;
 
-	if (!find(type, handler, map)) {
+Handler* Dispatcher::getHandler(const std::string& type) {
+	if (strcmp(type.c_str(), "mp3") == 0) {
+		return new MP3;
 	}
 
-	return handler->clone;
+	return new Default;
 }
-*/
 
+/*
 Handler* Dispatcher::getHandler(const std::string& type) {
 	std::map<std::string, Document::Handler*>::iterator it;
 	Handler *h;
@@ -95,7 +95,7 @@ Handler* Dispatcher::getHandler(const std::string& type) {
 //	return m_handlers[type];	
 	return m_factories[type]();
 }
-
+*/
 /**
  * blocks this thread until all workers have finished all
  * pending jobs. 

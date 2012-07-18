@@ -32,7 +32,7 @@ Metadata MP3::process(const std::string filename) {
 		fingerprint::FingerprintExtractor fextr;
 		fpe_mutex.unlock();
 		fextr.initForQuery(srate, nchannels, duration);
-		cout << "info: " << duration << "," << srate << "," << bitrate << "," << nchannels << std::endl;
+//		cout << "info: " << duration << "," << srate << "," << bitrate << "," << nchannels << std::endl;
 		mp3.skip(static_cast<int>(fextr.getToSkipMs()));
 		fextr.process(0, static_cast<size_t>(srate * nchannels * (fextr.getToSkipMs() / 1000.0)));
 

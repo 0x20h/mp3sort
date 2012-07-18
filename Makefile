@@ -1,29 +1,30 @@
 VPATH=src/ src/Thread src/Config src/Thread/Blocking src/Document src/Document/Handler src/fpclient
 CC=/usr/bin/g++
 PROGRAM=mp3sort
-LDLIBS=-lboost_program_options -lboost_thread-mt -lboost_filesystem -lboost_system -ldl 
+OBJECTS=MP3.o Handler.o MP3_Source.o HTTPClient.o Default.o Options.o Dispatcher.o
+LDLIBS=-lboost_program_options -lboost_thread-mt -lboost_filesystem -lboost_system -lfplib -lfftw3f -lmad -lsamplerate -lcurl
 
-all: lib mp3sort
+all: mp3sort
 
-mp3sort: src/mp3sort.cpp Options.o Queue.h Dispatcher.o Default.o Handler.h
-	$(CC) -fPIC -Llib/ -o $(PROGRAM) src/mp3sort.cpp Options.o  Dispatcher.o Default.o Handler.o $(LDLIBS) 
+mp3sort: src/mp3sort.cpp $(OBJECTS)
+	$(CC) -fPIC -Llib/ -o $(PROGRAM) src/mp3sort.cpp $(OBJECTS) $(LDLIBS) 
 
-lib: MP3.o Handler.o MP3_Source.o HTTPClient.o
-	rm -rf lib/libhandler-*
-	$(CC) -fPIC -o lib/libhandler-mp3.so.1 -shared MP3.o Handler.o MP3_Source.o HTTPClient.o -lfplib -lfftw3f -lmad -lsamplerate -lcurl -lboost_thread-mt
-	ln -sf libhandler-mp3.so.1 lib/libhandler-mp3.so
+#lib: MP3.o Handler.o MP3_Source.o HTTPClient.o
+#	rm -rf lib/libhandler-*
+#	$(CC) -fPIC -o lib/libhandler-mp3.so.1 -shared MP3.o Handler.o MP3_Source.o HTTPClient.o -lfplib -lfftw3f -lmad -lsamplerate -lcurl -lboost_thread-mt
+#	ln -sf libhandler-mp3.so.1 lib/libhandler-mp3.so
 
-MP3.o: src/Document/Handler/MP3.h src/Document/Handler/MP3.cpp src/fpclient/MP3_Source.h
-	$(CC) -fPIC -IFingerprinter/include -c src/Document/Handler/MP3.cpp
+MP3.o: src/Document/Handler/MP3.h src/Document/Handler/MP3.cpp src/fpclient/MP3_Source.h Handler.o
+	$(CC) -c src/Document/Handler/MP3.cpp
 
 MP3_Source.o:
-	$(CC) -fPIC -c src/fpclient/MP3_Source.cpp
+	$(CC) -c src/fpclient/MP3_Source.cpp
 
 HTTPClient.o:
-	$(CC) -fPIC -c src/fpclient/HTTPClient.cpp
+	$(CC) -c src/fpclient/HTTPClient.cpp
 
 Handler.o:
-	$(CC) -fPIC -c src/Document/Handler.cpp
+	$(CC) -c src/Document/Handler.cpp
 clean:
 	rm -f *.o
 
