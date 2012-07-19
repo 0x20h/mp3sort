@@ -4,9 +4,9 @@
 #include "Dispatcher.h"
 #include "Handler/Default.h"
 #include "Handler/MP3.h"
-#define NUM_WORKERS 16
 
 using namespace Document;
+const static int num_workers = boost::thread::hardware_concurrency();
 
 /**
  * stop marker
@@ -54,7 +54,7 @@ Dispatcher::~Dispatcher() {
 void Dispatcher::init() {
 	Worker *w;
 
-	for (int i = 0; i < NUM_WORKERS; i++) {
+	for (int i = 0; i < num_workers; i++) {
 		w = new Worker;
 		w->queue = &this->t_queue;
 		w->dispatcher = this;
@@ -101,7 +101,7 @@ Handler* Dispatcher::getHandler(const std::string& type) {
  * pending jobs. 
  */
 void Dispatcher::join() {
-	for (int i = 0; i < NUM_WORKERS; i++) {
+	for (int i = 0; i < num_workers; i++) {
 		// add poison pill for each worker
 		t_queue.enqueue(&pp);
 	}

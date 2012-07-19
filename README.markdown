@@ -11,6 +11,24 @@ mp3sort /from/src/directory /to/dest/directory [-c configfile] [-move]
 - set metadata as ID3 tag
 - config in .mp3sortrc
 
+Build Dependencies
+---------------------------
+
+For Fingerprinter:
+- libmad
+- fftw
+- libsamplerate
+- libtag
+- libcurl
+
+Boost libraries:
+- boost-thread
+- boost-filesystem
+
+```
+sudo apt-get install libmad0-dev libfftw3-dev libsamplerate-dev libtag1-dev libboost-dev libboost-thread-dev libboost-filesystem-dev libcurl4-dev
+```
+
 Milestones
 ----------------------------
 
