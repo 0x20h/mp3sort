@@ -16,13 +16,7 @@ void Worker::operator ()() {
 
 		Handler *h = dispatcher->getHandler(*item);
 		Metadata m = h->getMetadata(*item);
-		m.interpret = "foo";
-		m.album = boost::filesystem::basename(*item);
-		m.genre = "Rock";
-		m.title = "A Song";
-		m.track_no = 3;
-		m.year = 2012;
-
+		
 		if (!m.complete()) {
 			cerr << "unable to retrieve Metadata, skipping " << *item << endl;
 		} else {
@@ -30,8 +24,7 @@ void Worker::operator ()() {
 			h->storeMetadata(*item, m);
 
 			// copy
-			if (dispatcher->options.getOption("dst").as<string>() != "") {
-
+			if (dispatcher->options.hasOption("dst")) {
 				string dst = m.resolve(dispatcher->options.getOption("dst").as<string>());
 
 				cout << "copying " << *item << " to " << dst << endl;

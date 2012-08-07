@@ -27,14 +27,10 @@ Metadata MP3::getMetadata(const std::string& filename) {
 	meta.filename = filename;
 
 	// read from id3v2
-	if (readID3v2(filename, meta)) {
-		std::cout << "id3v2 tag present in " << filename << std::endl;
-		std::cout << meta.interpret << std::endl;
-		std::cout << meta.album << std::endl;
+	if (readID3v2(filename, meta) && meta.complete()) {
 		return meta;
 	}
-	// TODO remove
-	return meta;
+
 	HTTPClient client;
 	std::map<std::string, std::string> params;
 	int duration, srate, bitrate, nchannels;
@@ -71,6 +67,7 @@ Metadata MP3::getMetadata(const std::string& filename) {
 		params["samplerate"] = boost::lexical_cast<std::string>(srate);
 
 		pair<const char*, size_t> fpData = fextr.getFingerprint();
+		std::cout << "fp created " << std::endl;
 /*
 		// TODO: fill with metadata if found
 		std::string s = client.postRawObj(
@@ -92,6 +89,8 @@ Metadata MP3::getMetadata(const std::string& filename) {
 }
 
 void MP3::storeMetadata(const std::string& filename, const Metadata& meta) {
+
+	std::cout << "storing metadata for " << filename << std::endl;
 	//
 }
 
