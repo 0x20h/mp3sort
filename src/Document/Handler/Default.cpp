@@ -3,12 +3,11 @@
 
 using namespace Document;
 
-Metadata Default::process(std::string filename) {
-	Metadata m;
-//	std::cout << "thread " << boost::this_thread::get_id() << " doing nothing with " << std::endl;
-	return m;
+void Default::storeMetadata(const std::string& filename, const Metadata& metadata) {
 }
 
-std::string Default::getDescription() {
-	return "Default Handler";
+Metadata Default::getMetadata(const std::string& filename) {
+	Metadata m;
+	std::cout << "thread " << boost::this_thread::get_id() << " doing nothing with " << filename << std::endl;
+	return m;
 }

@@ -4,7 +4,7 @@ namespace Document
 {
 	class Default : public Handler {
 		public:
-			Metadata process(const std::string filename);
-			std::string getDescription();
+			Metadata getMetadata(const std::string& filename);
+			void storeMetadata(const std::string& filename, const Metadata& metadata);
 	};
 }

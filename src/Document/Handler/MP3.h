@@ -1,15 +1,12 @@
 #include "../Handler.h"
-#include "../../fpclient/MP3_Source.h"
-#include "../../fpclient/HTTPClient.h"
-#include <fplib/FingerprintExtractor.h>
 
 namespace Document 
 {
 	class MP3 : public Handler {
 		public:
-			MP3();
-			~MP3();
-			std::string getDescription();
-			Metadata process(const std::string filename);
+			Metadata getMetadata(const std::string& filename);
+			void storeMetadata(const std::string& filename, const Metadata& metadata);
+		protected:
+			bool readID3v2(const std::string& filename, Metadata& meta);
 	};
 }

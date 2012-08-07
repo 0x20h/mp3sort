@@ -1,32 +1,30 @@
 #ifndef DOCUMENT_HANDLER_H
 #define DOCUMENT_HANDLER_H
+
 #include <boost/thread.hpp>
 #include <string>
 #include <iostream>
+
+#include "Metadata.h"
 #include "../Config/Options.h"
 #include "../Thread/Blocking/Queue.h"
 
 namespace Document 
 {
-	struct Metadata {
-		std::string filename;
-		std::string fingerprint;
-		std::string interpret;
-		std::string title;
-		std::string album;
-		short int   error;
-	};
-
 	class Handler {
 		public:
-			Handler();
-			~Handler();
 			void setOptions(const Config::Options *o);
-			virtual Document::Metadata process(const std::string filename) = 0;
-			virtual std::string getDescription() = 0;
+			/**
+			 * retrieve Metadata from file, either from some tags or from a fp service...
+			 */
+			virtual Metadata getMetadata(const std::string& filename) = 0;
+
+			/**
+			 * store Metadata
+			 */
+			virtual void storeMetadata(const std::string& filename, const Metadata& metadata) = 0;
 		protected:
 			const Config::Options *options;
-			Thread::Blocking::Queue<std::string *> *queue;
 	};
 }
 

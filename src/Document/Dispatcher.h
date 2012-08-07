@@ -9,22 +9,22 @@
 
 namespace Document 
 {
+	const static int num_workers = boost::thread::hardware_concurrency();
+
 	class Dispatcher {
 		public:
-			Dispatcher(const Config::Options& options, const int size) : options(options), size(size), t_queue(size) {}
+			Dispatcher(const Config::Options& options) : options(options), t_queue(num_workers) {}
 			~Dispatcher();
-			Handler* getHandler(const std::string& type);
-			void dispatch(std::string work);
+			Handler* getHandler(const std::string& item);
+			void dispatch(const std::string& work);
 			void init();
 			void join();
+			Config::Options options;
 		private:
 			std::map<std::string,Document::Handler *(*)()> m_factories;
 			std::map<std::string,Document::Handler *> m_handlers;
 			Thread::Blocking::Queue<std::string *> t_queue;
 			boost::thread_group t_group;
-			int size;
-			int running;
-			Config::Options options;
 	};
 }
 

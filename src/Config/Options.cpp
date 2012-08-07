@@ -14,16 +14,25 @@ Options::Options(int argc, char * argv[])
 	// Declare visible options.
 	o_general.add_options()
 	    ("help,h", "produce help message")
-		("verbose,v", "be more verbose")
-		("version", "show version information")
-		("config,c", po::value<string>()->default_value("~/.mp3sortrc"), "read configuration from file");
+//		("verbose,v", "be more verbose")
+		("version", "show version information");
 
 	
 	po::options_description o_sort("Sorting");
 	o_sort.add_options()
   		("move,m", "delete files from src after sorting")
   		("src,s", po::value<string>(), "read files from source directory")
-  		("dst,d", po::value<string>(), "destination directory where to put sorted files");
+  		("dst,d", po::value<string>(), 
+			"Destination directory where to put sorted files."
+			"The following placeholders will be used as replacement parameters:"
+			"\n\n"
+			"\t%i: Interpret\n"
+			"\t%a: Album\n"
+			"\t%s: Song Title\n"
+			"\t%t: Track Number\n"
+			"\t%g: Genre\n"
+			"\t%y: Year"
+		);
 
 	this->o_visible = new po::options_description("Available Options");
 	this->o_visible->add(o_general).add(o_sort);

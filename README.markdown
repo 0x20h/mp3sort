@@ -3,7 +3,7 @@ mp3sort Project
 mp3sort helps sort your mp3 collection using information retrieved from the fingerprinting service provided by last.fm.
 This project is still in early development.
 
-mp3sort /from/src/directory /to/dest/directory [-c configfile] [-move]
+mp3sort /from/src/directory /to/dest/directory/%i/%a-%y/%n-%t [-move]
 
 - read all music files from src directory, get metadata for each song and sort (according to config) in dest directory
 - delete in src directory if -move
