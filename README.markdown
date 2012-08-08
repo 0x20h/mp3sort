@@ -14,7 +14,7 @@ mp3sort /from/src/directory /to/dest/directory/%i/%a-%y/%n-%t [-move]
 Build Dependencies
 ---------------------------
 
-For Fingerprinter:
+For Fingerprinter (https://github.com/lastfm/Fingerprinter):
 - libmad
 - fftw
 - libsamplerate
@@ -26,7 +26,7 @@ Boost libraries:
 - boost-filesystem
 
 ```
-sudo apt-get install libmad0-dev libfftw3-dev libsamplerate-dev libtag1-dev libboost-dev libboost-thread-dev libboost-filesystem-dev libcurl4-dev
+sudo apt-get install libmad0-dev libfftw3-dev libsamplerate-dev libtag1-dev libboost-dev libboost-thread-dev libboost-filesystem-dev libcurl4-dev libboost-program-options-dev
 ```
 
 Milestones
