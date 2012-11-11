@@ -1,5 +1,6 @@
 #include "../../fpclient/MP3_Source.h"
 #include "../../fpclient/HTTPClient.h"
+#include "../../../deps/tinyxml2/tinyxml2.h"
 #include "MP3.h"
 
 #include <iostream>
@@ -16,11 +17,12 @@ static boost::mutex fpe_mutex;
 
 const char FP_SERVER_NAME[] = "ws.audioscrobbler.com/fingerprint/query/";
 const char METADATA_SERVER_NAME[] = "http://ws.audioscrobbler.com/2.0/";
-const char PUBLIC_CLIENT_NAME[]	= "fp client 1.6";
+const char PUBLIC_CLIENT_NAME[]	= "mp3sort 0.4";
 const char HTTP_POST_DATA_NAME[] = "fpdata";
-const char LASTFM_API_KEY[] = "2bfed60da64b96c16ea77adbf5fe1a82";
+const char LASTFM_API_KEY[] = "a2a3170f5858416809be644bb6ba5e27"; 
 
 using namespace Document;
+using namespace tinyxml2;
 
 Metadata MP3::getMetadata(const std::string& filename) {
 	Metadata meta;
@@ -68,9 +70,9 @@ Metadata MP3::getMetadata(const std::string& filename) {
 
 		pair<const char*, size_t> fpData = fextr.getFingerprint();
 		std::cout << "fp created " << std::endl;
-/*
-		// TODO: fill with metadata if found
-		std::string s = client.postRawObj(
+
+		// search the fingerprint	
+		std::string fp_response = client.postRawObj(
 			FP_SERVER_NAME,
 			params,
 			fpData.first,
@@ -78,10 +80,63 @@ Metadata MP3::getMetadata(const std::string& filename) {
 			HTTP_POST_DATA_NAME,
 			false
 		);
-		std::cout << s << std::endl;
-*/
+
+		if (fp_response.find("FOUND")) {
+			int fpid;
+			istringstream iss(fp_response);
+			iss >> fpid;
+
+			ostringstream oss;
+			oss << METADATA_SERVER_NAME 
+					<< "?method=track.getfingerprintmetadata"
+					<< "&fingerprintid=" << fpid
+					<< "&api_key=" << LASTFM_API_KEY;
+			std::cout << ">>" << oss.str() << std::endl;
+			// Get Fingerprint Metadata
+			std::string metadata_response = client.get(oss.str());
+			
+//		std::cout << metadata_response << std::endl;	
+			XMLDocument* meta_doc = new XMLDocument();
+			meta_doc->Parse(metadata_response.c_str());
+			const char* mbid = meta_doc
+				->FirstChildElement("lfm")
+				->FirstChildElement("tracks")
+				->FirstChildElement("track")
+				->FirstChildElement("mbid")
+				->GetText();
+
+			if (mbid == NULL) {
+				std::cout << "NO mbid " << mbid << std::endl;
+				return meta;
+			}
+
+			ostringstream oss2;
+			oss2 << METADATA_SERVER_NAME 
+					<< "?method=track.getInfo"
+					<< "&mbid=" << mbid
+					<< "&api_key=" << LASTFM_API_KEY;
+
+			// Get Track info
+			std::string track_info_response = client.get(oss2.str());
+			
+			std::cout << "-----" << std::endl;	
+			std::cout << track_info_response << std::endl;	
+			
+			XMLDocument* doc = new XMLDocument();
+			doc->Parse(track_info_response.c_str());
+			XMLElement* track = doc->FirstChildElement("lfm")->FirstChildElement("track");
+
+			if (track != NULL) {
+				meta.interpret = track->FirstChildElement("artist")->FirstChildElement("name")->GetText();
+				meta.title = track->FirstChildElement("name")->GetText();
+				// TODO: Fetch album info, release year
+				meta.album = track->FirstChildElement("album")->FirstChildElement("title")->GetText();	
+			}
+		} else {
+			std::cout << "Unknown: " << fp_response << std::endl;
+		}
 	} catch(const std::exception &e) {
-		std::cerr << "Exception: " <<e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << std::endl;
 		return meta;
 	}
 

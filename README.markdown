@@ -47,21 +47,6 @@ Milestones
 - mp3 handler opens mp3file, reads sample data and delivers to fingerprint lib
 - returned results are used to move file to correct folder
 
-Classes
---------------------
-mp3sort.cpp 	- main program
-
-Thread/		- Threading stuff
-Document/	- document abstraction, maybe later adapt to other file formats
-	Document.h
-	Handler/
-		Handler.h
-		MP3.cpp
-		PDF.cpp
-	
-	...
-Config/		- read/write configuration and process program options
-
 Document
 -------------------
 
@@ -85,6 +70,12 @@ Document::Handler knows how to...
 - Document::Handler must be implemented by all filetype handlers
 
 Misc
+----
 
 for music classification see (fingerprinter is based on this work)
 http://www.cs.cmu.edu/~yke/musicretrieval/cvpr2005-mr.pdf
+
+License
+-------
+
+[GPL v3](http://www.gnu.org/licenses/gpl.txt)
