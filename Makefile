@@ -2,15 +2,19 @@ VPATH=src/ src/Thread src/Config src/Thread/Blocking src/Document src/Document/H
 CC=/usr/bin/g++
 PROGRAM=mp3sort
 OBJECTS=MP3.o Handler.o MP3_Source.o HTTPClient.o Default.o Options.o Dispatcher.o Worker.o Metadata.o
-LDLIBS=-lboost_program_options -lboost_thread-mt -lboost_filesystem -lboost_system -lfplib -lfftw3f -lmad -lsamplerate -lcurl -ltag
+LDLIBS=-lboost_program_options -lboost_thread-mt -lboost_filesystem -lboost_system -lfftw3f -lmad -lsamplerate -lcurl -ltag
 
-all: mp3sort
+all: fingerprinter mp3sort
+
+fingerprinter:
+	cd deps/Fingerprinter/ && cmake . && make
 
 mp3sort: src/mp3sort.cpp $(OBJECTS)
-	$(CC) -fPIC -Llib/ -o $(PROGRAM) src/mp3sort.cpp $(OBJECTS) $(LDLIBS)
+	#-fPIC
+	$(CC) -o $(PROGRAM) src/mp3sort.cpp $(OBJECTS) deps/Fingerprinter/lib/libfplib.a  $(LDLIBS)
 
-MP3.o: src/Document/Handler/MP3.h src/Document/Handler/MP3.cpp src/fpclient/MP3_Source.h Handler.o
-	$(CC) -c src/Document/Handler/MP3.cpp
+MP3.o: src/Document/Handler/MP3.h src/Document/Handler/MP3.cpp src/fpclient/MP3_Source.h Handler.o 
+	$(CC) -Ideps/Fingerprinter/include -c src/Document/Handler/MP3.cpp deps/Fingerprinter/lib/libfplib.a 
 
 MP3_Source.o:
 	$(CC) -c src/fpclient/MP3_Source.cpp
@@ -39,4 +43,3 @@ clean:
 
 proper:
 	rm -f *.o $(PROGRAM)
-	rm -rf lib

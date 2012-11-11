@@ -20,13 +20,14 @@ For Fingerprinter (https://github.com/lastfm/Fingerprinter):
 - libsamplerate
 - libtag
 - libcurl
+- cmake
 
 Boost libraries:
 - boost-thread
 - boost-filesystem
 
 ```
-sudo apt-get install libmad0-dev libfftw3-dev libsamplerate-dev libtag1-dev libboost-dev libboost-thread-dev libboost-filesystem-dev libcurl4-dev libboost-program-options-dev
+sudo apt-get install cmake libmad0-dev libfftw3-dev libsamplerate-dev libtag1-dev libboost-dev libboost-thread-dev libboost-filesystem-dev libcurl4-dev libboost-program-options-dev
 ```
 
 Milestones
