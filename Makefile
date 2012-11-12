@@ -41,7 +41,7 @@ Metadata.o: Metadata.h Metadata.cpp
 
 clean:
 	rm -f *.o
-	cd deps/tinyxml && make clean
+	cd deps/tinyxml2 && make clean
 	cd deps/Fingerprinter && make clean
 
 proper:
