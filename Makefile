@@ -1,7 +1,8 @@
-VPATH=src/ src/Thread src/Config src/Thread/Blocking src/Document src/Document/Handler src/fpclient
+VPATH=src/ src/Thread src/Config src/Thread/Blocking src/Document src/Document/Handler
 CC=/usr/bin/g++
 PROGRAM=mp3sort
-OBJECTS=MP3.o Handler.o MP3_Source.o HTTPClient.o Default.o Options.o Dispatcher.o Worker.o Metadata.o tinyxml2.o 
+FPOBJ=deps/Fingerprinter/CMakeFiles/lastfm-fpclient.dir/src/fpclient/HTTPClient.cpp.o deps/Fingerprinter/CMakeFiles/lastfm-fpclient.dir/src/fpclient/MP3_Source.cpp.o
+OBJECTS=LastFmClient.o MP3.o Handler.o Default.o Options.o Dispatcher.o Worker.o Metadata.o tinyxml2.o $(FPOBJ) 
 LDLIBS=-lboost_program_options -lboost_thread-mt -lboost_filesystem -lboost_system -lfftw3f -lmad -lsamplerate -lcurl -ltag
 all: tinyxml fingerprinter mp3sort
 
@@ -14,14 +15,12 @@ fingerprinter:
 tinyxml:
 	$(CC) -c deps/tinyxml2/tinyxml2.cpp
 
-MP3.o: src/Document/Handler/MP3.h src/Document/Handler/MP3.cpp src/fpclient/MP3_Source.h Handler.o 
+MP3.o: src/Document/Handler/MP3.h src/Document/Handler/MP3.cpp Handler.o LastFmClient.o
 	$(CC) -Ideps/Fingerprinter/include -c src/Document/Handler/MP3.cpp 
 
-MP3_Source.o:
-	$(CC) -c src/fpclient/MP3_Source.cpp
+LastFmClient.o: src/Service/LastFmClient.h src/Service/LastFmClient.cpp
+	$(CC) -c src/Service/LastFmClient.cpp 
 
-HTTPClient.o:
-	$(CC) -c src/fpclient/HTTPClient.cpp
 
 Handler.o:
 	$(CC) -c src/Document/Handler.cpp
