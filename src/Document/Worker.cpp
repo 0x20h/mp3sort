@@ -19,6 +19,7 @@ void Worker::operator ()() {
 		Metadata m = h->getMetadata(*item);
 		
 		if (!m.complete()) {
+			cout << "META: " <<  m.toString()  << endl;
 			cerr << "unable to retrieve Metadata, skipping " << *item << endl;
 		} else {
 			// store metadata

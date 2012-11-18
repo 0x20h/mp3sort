@@ -8,6 +8,7 @@ namespace Document
 	class Metadata {
 		public:
 			Metadata(): track_no(0), year(0) {}
+			std::string toString();
 			/**
 			 * check if every property is set with a sane value
 			 *
@@ -27,7 +28,7 @@ namespace Document
 			 * - %y Year
 			 */
 			std::string resolve(std::string pattern);
-
+			
 			/* properties */
 			std::string filename;
 			std::string interpret;

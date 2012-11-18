@@ -30,7 +30,6 @@ XMLDocument* LastFmClient::trackGetInfo(string mbid) {
 			<< "&mbid=" << mbid
 			<< "&api_key=" << LASTFM_API_KEY;
 	
-	// Get Fingerprint Metadata
 	string response = client.get(oss.str());
 	XMLDocument* doc = new XMLDocument();
 	doc->Parse(response.c_str());
@@ -44,7 +43,6 @@ XMLDocument* LastFmClient::albumGetInfo(string mbid) {
 			<< "&mbid=" << mbid
 			<< "&api_key=" << LASTFM_API_KEY;
 	
-	// Get Fingerprint Metadata
 	string response = client.get(oss.str());
 	XMLDocument* doc = new XMLDocument();
 	doc->Parse(response.c_str());
@@ -58,14 +56,11 @@ XMLDocument* LastFmClient::albumGetInfo(string artist, string album) {
 			<< "&album=" << client.encode(album)
 			<< "&artist=" << client.encode(artist)
 			<< "&api_key=" << LASTFM_API_KEY;
-	cout << ">> " << oss.str() << endl;	
-	// Get Fingerprint Metadata
+	
 	string response = client.get(oss.str());
-	cout << "<< " << response.c_str() << endl ;
 	XMLDocument* doc = new XMLDocument();
 	doc->Parse(response.c_str());
     return doc;
-
 }
 
 string LastFmClient::artistGetInfo(string mbid) {
@@ -78,7 +73,6 @@ XMLDocument* LastFmClient::fingerprintGetMetadata(int fpid) {
 			<< "&fingerprintid=" << fpid
 			<< "&api_key=" << LASTFM_API_KEY;
 	
-	// Get Fingerprint Metadata
 	string response = client.get(oss.str());
 	XMLDocument* doc = new XMLDocument();
 	doc->Parse(response.c_str());
@@ -117,7 +111,6 @@ void LastFmClient::getMetadata(int fpid, Document::Metadata* meta) {
     // clear match ?
 	XMLElement* fpMeta_track = fpMeta->FirstChildElement("lfm")->FirstChildElement("tracks")->FirstChildElement("track");
     const char* rank = fpMeta_track->Attribute("rank");
-    print(fpMeta);
 	if (rank == NULL) {
         return;
     }
@@ -135,15 +128,14 @@ void LastFmClient::getMetadata(int fpid, Document::Metadata* meta) {
 			XMLElement* trackInfo_track = trackInfo->FirstChildElement("lfm")->FirstChildElement("track");
 			// fetch album info
 			XMLElement* trackInfo_album = trackInfo_track->FirstChildElement("album");
-			print(trackInfo);
 			if (trackInfo_album != NULL) {
 				meta->album = trackInfo_album->FirstChildElement("title")->GetText();
 				meta->track_no = trackInfo_album->IntAttribute("position");
 				XMLDocument* albumInfo = albumGetInfo(meta->interpret, meta->album);
-				print(albumInfo);
-				
 				const char* release = albumInfo->FirstChildElement("lfm")->FirstChildElement("album")->FirstChildElement("releasedate")->GetText();
-				cout << "release: " << release << endl;
+				if (release != NULL && release != "") {
+					meta->year = atoi(release);
+				}
 			}
 		}
 	}

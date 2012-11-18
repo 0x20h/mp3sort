@@ -1,5 +1,6 @@
 #include "Metadata.h"
 #include <iostream>
+#include <sstream>
 
 /**
  * check if all properties are not empty
@@ -48,4 +49,15 @@ std::string Document::Metadata::resolve(std::string pattern) {
 	}
 	
 	return pattern;
+}
+
+
+std::string Document::Metadata::toString() {
+	std::ostringstream oss;
+	oss << "Artist: " << interpret << std::endl
+		<< "Title: " << title << std::endl
+		<< "Album: " << album << std::endl
+		<< "Track: " << track_no << std::endl
+		<< "Year: " << year  << std::endl;
+	return oss.str();
 }
