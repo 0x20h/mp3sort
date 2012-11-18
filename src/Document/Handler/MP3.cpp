@@ -1,5 +1,4 @@
 #include "../../../deps/Fingerprinter/src/fpclient/MP3_Source.h"
-#include "../../../deps/tinyxml2/tinyxml2.h"
 #include "../../Service/LastFmClient.h"
 #include "MP3.h"
 
@@ -16,13 +15,11 @@
 static boost::mutex fpe_mutex;
 
 using namespace Document;
-using namespace tinyxml2;
 
 Metadata MP3::getMetadata(const std::string& filename) {
 	Metadata meta;
 	meta.filename = filename;
 	Service::LastFmClient client;
-
 	// read from id3v2
 	if (readID3v2(filename, meta) && meta.complete()) {
 		return meta;
@@ -63,7 +60,6 @@ Metadata MP3::getMetadata(const std::string& filename) {
 		params["samplerate"] = boost::lexical_cast<std::string>(srate);
 
 		pair<const char*, size_t> fpData = fextr.getFingerprint();
-		std::cout << "fp created " << std::endl;
 		int fpid = client.getFingerprint(fpData, params);
 		client.getMetadata(fpid, &meta);
 

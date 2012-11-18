@@ -1,5 +1,6 @@
 VPATH=src/ src/Thread src/Config src/Thread/Blocking src/Document src/Document/Handler
 CC=/usr/bin/g++
+CXXFLAGS=
 PROGRAM=mp3sort
 FPOBJ=deps/Fingerprinter/CMakeFiles/lastfm-fpclient.dir/src/fpclient/HTTPClient.cpp.o deps/Fingerprinter/CMakeFiles/lastfm-fpclient.dir/src/fpclient/MP3_Source.cpp.o
 OBJECTS=LastFmClient.o MP3.o Handler.o Default.o Options.o Dispatcher.o Worker.o Metadata.o tinyxml2.o $(FPOBJ) 
@@ -7,7 +8,7 @@ LDLIBS=-lboost_program_options -lboost_thread-mt -lboost_filesystem -lboost_syst
 all: tinyxml fingerprinter mp3sort
 
 mp3sort: src/mp3sort.cpp $(OBJECTS)
-	$(CC) -o $(PROGRAM) src/mp3sort.cpp $(OBJECTS) deps/Fingerprinter/lib/libfplib.a $(LDLIBS)
+	$(CC) $(CXXFLAGS) -o $(PROGRAM) src/mp3sort.cpp $(OBJECTS) deps/Fingerprinter/lib/libfplib.a $(LDLIBS)
 
 fingerprinter:
 	cd deps/Fingerprinter/ && cmake . && make

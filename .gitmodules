@@ -1,6 +1,3 @@
-[submodule "deps/Fingerprinter"]
-	path = deps/Fingerprinter
-	url = git://github.com/lastfm/Fingerprinter.git
 [submodule "deps/tinyxml2"]
 	path = deps/tinyxml2
 	url = git://github.com/leethomason/tinyxml2.git

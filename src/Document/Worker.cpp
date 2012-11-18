@@ -1,5 +1,6 @@
 #include "Worker.h"
 #include <boost/filesystem.hpp>
+#include <boost/thread/thread.hpp>
 
 using namespace Document;
 using namespace std;
@@ -36,5 +37,6 @@ void Worker::operator ()() {
 		}
 			
 		delete h;
+		boost::this_thread::sleep(boost::posix_time::seconds(1));
 	}
 }
