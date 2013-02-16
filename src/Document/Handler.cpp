@@ -3,6 +3,6 @@
 
 using namespace Document;
 
-void Handler::setOptions(const Config::Options *o) {
+void Handler::setOptions(Config::Options *o) {
 	this->options = o;
 }

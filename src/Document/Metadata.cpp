@@ -1,6 +1,7 @@
 #include "Metadata.h"
 #include <iostream>
 #include <sstream>
+#include <stdio.h>
 
 /**
  * check if all properties are not empty
@@ -13,11 +14,8 @@ bool Document::Metadata::complete() {
 		interpret == "" ||
 		title == "" ||
 		album == "" ||
-		genre == "" ||
-		track_no < 1 ||
-		year < 1
+		track_no < 1
 	) {
-
 		return false;
 	}
 
@@ -44,8 +42,10 @@ std::string Document::Metadata::resolve(std::string pattern) {
 	}
 
 	// track no
-	if ((pos = pattern.find("%n")) >= 0) {
-		pattern.replace(pos, 2, "3");
+	if ((pos = pattern.find("%t")) >= 0) {
+		std::ostringstream ss;
+		ss << track_no;
+		pattern.replace(pos, 2, ss.str());
 	}
 	
 	return pattern;
@@ -54,10 +54,12 @@ std::string Document::Metadata::resolve(std::string pattern) {
 
 std::string Document::Metadata::toString() {
 	std::ostringstream oss;
-	oss << "Artist: " << interpret << std::endl
+	oss << "File: " << filename << std::endl
+		<< "Artist: " << interpret << std::endl
 		<< "Title: " << title << std::endl
+		<< "Track No: " << track_no << std::endl
 		<< "Album: " << album << std::endl
-		<< "Track: " << track_no << std::endl
-		<< "Year: " << year  << std::endl;
+		<< "Year: " << year  << std::endl
+		<< "--------------------------" << std::endl;
 	return oss.str();
 }

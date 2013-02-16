@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <boost/thread/thread.hpp>
 
 const char FP_SERVER_NAME[] = "ws.audioscrobbler.com/fingerprint/query/";
 const char METADATA_SERVER_NAME[] = "http://ws.audioscrobbler.com/2.0/";
@@ -13,14 +14,10 @@ using namespace tinyxml2;
 using namespace Service;
 using namespace std;
 
-LastFmClient::LastFmClient() {
-	// get HTTPClient instance
-	HTTPClient client;
-}
-
 // -----------------------------------------------------------------------------
 
 LastFmClient::~LastFmClient() {
+
 }
 
 XMLDocument* LastFmClient::trackGetInfo(string mbid) {
@@ -107,7 +104,11 @@ void LastFmClient::print(XMLDocument* doc) {
 
 
 void LastFmClient::getMetadata(int fpid, Document::Metadata* meta) {
-    XMLDocument* fpMeta = fingerprintGetMetadata(fpid);
+	cout << "fetching metdata for " << meta->filename << " from lastfm" << endl;
+	// @TODO: use a more sophisticated approach to ensure not more than 5req/sec
+	boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+
+	XMLDocument* fpMeta = fingerprintGetMetadata(fpid);
     // clear match ?
 	XMLElement* fpMeta_track = fpMeta->FirstChildElement("lfm")->FirstChildElement("tracks")->FirstChildElement("track");
     const char* rank = fpMeta_track->Attribute("rank");

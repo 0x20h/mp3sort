@@ -14,27 +14,24 @@ Options::Options(int argc, char * argv[])
 	// Declare visible options.
 	o_general.add_options()
 	    ("help,h", "produce help message")
-//		("verbose,v", "be more verbose")
+		("verbose,v", "be more verbose")
+  		("force-fingerprint,f", "force generation and querying fingerprint data (e.g. wrong ID3v2 tags)")
+		("metadata-only", "only fetch metadata, no sorting.")
 		("version", "show version information");
-
 	
 	po::options_description o_sort("Sorting");
 	o_sort.add_options()
   		("move,m", "delete files from src after sorting")
   		("src,s", po::value<string>(), "read files from source directory")
-  		("dst,d", po::value<string>(), 
-			"Destination directory where to put sorted files."
-			"The following placeholders will be used as replacement parameters:"
+  		("dst,d", po::value<string>()->default_value("sorted_music/%i/%a/%t_%s"), "Destination directory.\n"
+		 	"The following placeholders will be used as replacement parameters:"
 			"\n\n"
 			"\t%i: Interpret\n"
 			"\t%a: Album\n"
 			"\t%s: Song Title\n"
 			"\t%t: Track Number\n"
-			"\t%g: Genre\n"
-			"\t%y: Year"
 		);
-
-	this->o_visible = new po::options_description("Available Options");
+	this->o_visible = new po::options_description("Usage: mp3sort options [input] [output]\n\nOptions");
 	this->o_visible->add(o_general).add(o_sort);
 	
 	// declare config file options
@@ -68,7 +65,7 @@ const po::options_description Options::getDescription() {
 	return *this->o_visible;
 }
 
-bool Options::hasOption(const string name) {
+const bool Options::hasOption(string name) {
 	return (bool) this->v_map.count(name);
 }
 

@@ -13,7 +13,7 @@ namespace Document
 {
 	class Handler {
 		public:
-			void setOptions(const Config::Options *o);
+			void setOptions(Config::Options *o);
 			/**
 			 * retrieve Metadata from file, either from some tags or from a fp service...
 			 */
@@ -24,7 +24,7 @@ namespace Document
 			 */
 			virtual void storeMetadata(const std::string& filename, const Metadata& metadata) = 0;
 		protected:
-			const Config::Options *options;
+			Config::Options *options;
 	};
 }
 
