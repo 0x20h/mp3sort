@@ -1,6 +1,6 @@
 mp3sort Project
 -----------------
-mp3sort helps sort your mp3 collection using information retrieved from the fingerprinting service provided by last.fm.
+mp3sort helps sort your mp3 collection using information retrieved from the fingerprinting service provided by [last.fm API](http://www.lastfm.de/api/show/track.getFingerprintMetadata).
 This project is still in early development, no warranties.
 
 mp3sort /from/src/directory /to/dest/directory/%i/%a-%y/%n-%t [-move]
@@ -23,9 +23,10 @@ For Fingerprinter (https://github.com/lastfm/Fingerprinter):
 
 Boost libraries:
 - boost-thread
+- boost-program-options
 - boost-filesystem
 
-```
+``` sh
 sudo apt-get install cmake libmad0-dev libfftw3-dev libsamplerate-dev libtag1-dev libboost-dev libboost-thread-dev libboost-filesystem-dev libcurl4-dev libboost-program-options-dev
 ```
 
