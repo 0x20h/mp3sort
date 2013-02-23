@@ -1,5 +1,5 @@
-mp3sort Project
------------------
+mp3sort
+-------
 mp3sort helps sort your mp3 collection using information retrieved from the fingerprinting service provided by [last.fm API](http://www.lastfm.de/api/show/track.getFingerprintMetadata).
 This project is still in early development, no warranties.
 
@@ -10,10 +10,11 @@ mp3sort /from/src/directory /to/dest/directory/%i/%a-%y/%n-%t [-move]
 - metadata retrieval from lastfm using lastfm's fingerprinting library if ID3v2 tag missing
 - set metadata as ID3 tag
 
-Build Dependencies
----------------------------
 
-For Fingerprinter (https://github.com/lastfm/Fingerprinter):
+Build 
+-----
+
+For [Fingerprinter](https://github.com/lastfm/Fingerprinter):
 - libmad
 - fftw
 - libsamplerate
@@ -26,8 +27,14 @@ Boost libraries:
 - boost-program-options
 - boost-filesystem
 
+
 ``` sh
+git clone https://github.com/0x20h/mp3sort.git
+cd mp3sort
+git submodule update --init
+
 sudo apt-get install cmake libmad0-dev libfftw3-dev libsamplerate-dev libtag1-dev libboost-dev libboost-thread-dev libboost-filesystem-dev libcurl4-dev libboost-program-options-dev
+make
 ```
 
 Misc
