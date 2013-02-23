@@ -3,13 +3,19 @@ mp3sort
 mp3sort helps sort your mp3 collection using information retrieved from the fingerprinting service provided by [last.fm API](http://www.lastfm.de/api/show/track.getFingerprintMetadata).
 This project is still in early development, no warranties.
 
-mp3sort /from/src/directory /to/dest/directory/%i/%a-%y/%n-%t [-move]
+``` sh
+mp3sort /from/src/directory /to/dest/directory/%i/%a/%n-%t [-move]
+```
+- %i: Interpret
+- %a: Album
+- %n: Track number
+- %t: Track name
 
-- read all music files from src directory, get metadata for each song and sort (according to dest-pattern) in dest directory
-- delete in src directory if -move
-- metadata retrieval from lastfm using lastfm's fingerprinting library if ID3v2 tag missing
-- set metadata as ID3 tag
-
+mp3sort 
+- reads all music files from src directory, get metadata for each song and sort (according to dest-pattern) in dest directory
+- deletes in src directory if -move
+- retrieves metadata from lastfm using lastfm's fingerprinting library if ID3v2 tag is missing
+- updates metadata as ID3v2 tag
 
 Build 
 -----
